@@ -3,138 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In & Sign Up</title>
+    <title>Login & Sign Up with Animated Border & Hearts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
         }
+
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(to right, #ff9966, #ff5e62);
-        }
-        .container {
-            position: relative;
-            width: 400px;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            background: #222;
             overflow: hidden;
         }
-        h2 {
+
+        /* 💖 Floating Hearts */
+        .heart {
+            position: absolute;
+            color: pink;
+            font-size: 20px;
+            opacity: 0.8;
+            animation: floatHearts linear infinite;
+        }
+
+        @keyframes floatHearts {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .box {
+            position: relative;
+            width: 350px;
+            padding: 40px;
+            background: #111;
             text-align: center;
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        /* Animated Border */
+        .border-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, cyan, magenta, cyan);
+            z-index: -1;
+            animation: animateBorder 4s linear infinite;
+        }
+
+        @keyframes animateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Border Overlay */
+        .box::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            background: #111;
+            border-radius: 10px;
+            z-index: 1;
+        }
+
+        h2 {
+            color: #fff;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
         }
-        .form-group {
-            margin-bottom: 15px;
+
+        .input-box {
+            position: relative;
+            margin: 15px 0;
+            z-index: 2;
         }
-        input {
+
+        .input-box input {
             width: 100%;
             padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
+            background: transparent;
+            border: 1px solid #fff;
+            color: #fff;
             border-radius: 5px;
-            font-size: 16px;
+            outline: none;
         }
+
+        .input-box span {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #aaa;
+            transition: 0.3s;
+        }
+
+        .input-box input:focus + span,
+        .input-box input:valid + span {
+            top: -15px;
+            color: cyan;
+            font-size: 12px;
+        }
+
+        .imp-links {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            z-index: 2;
+        }
+
+        .imp-links a {
+            color: cyan;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .imp-links a:hover {
+            text-decoration: underline;
+        }
+
         .btn {
             width: 100%;
             padding: 10px;
-            background: #ff5e62;
-            color: white;
+            background: cyan;
             border: none;
+            color: #111;
+            font-weight: bold;
             border-radius: 5px;
-            font-size: 18px;
             cursor: pointer;
             transition: 0.3s;
-        }
-        .btn:hover {
-            background: #e64c57;
-        }
-        .toggle-text {
-            text-align: center;
-            margin-top: 15px;
-        }
-        .toggle-text a {
-            color: #ff5e62;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .toggle-text a:hover {
-            text-decoration: underline;
-        }
-        .form-container {
+            z-index: 2;
             position: relative;
-            transition: transform 0.5s ease-in-out;
         }
-        .signup-form {
-            display: none;
+
+        .btn:hover {
+            background: magenta;
+        }
+
+        .toggle-link {
+            color: magenta;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            font-size: 14px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="form-container" id="form-container">
-            <!-- Sign In Form -->
-            <div id="signin-form">
-                <h2>Sign In</h2>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" placeholder="Enter your password">
-                </div>
-                <button class="btn">Sign In</button>
-                <div class="toggle-text">
-                    Don't have an account? <a onclick="toggleForm()">Sign Up</a>
-                </div>
-            </div>
+    <!-- 💖 Floating Hearts Container -->
+    <div id="heart-container"></div>
 
-            <!-- Sign Up Form -->
-            <div id="signup-form" class="signup-form">
-                <h2>Sign Up</h2>
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" placeholder="Enter your name">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" placeholder="Create a password">
-                </div>
-                <button class="btn">Sign Up</button>
-                <div class="toggle-text">
-                    Already have an account? <a onclick="toggleForm()">Sign In</a>
-                </div>
+    <div class="box">
+        <div class="border-animation"></div>
+        <h2 id="form-title">Sign In</h2>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <div class="input-box">
+                <input type="email" required>
+                <span>Email</span>
             </div>
-        </div>
+            <div class="input-box">
+                <input type="password" required>
+                <span>Password</span>
+            </div>
+            <div class="imp-links">
+                <a href="#">Forget Password?</a>
+            </div>
+            <input type="submit" value="Login" class="btn">
+            <p class="toggle-link" onclick="toggleForm()">Don't have an account? Sign Up</p>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signupForm" style="display: none;">
+            <div class="input-box">
+                <input type="email" required>
+                <span>Email</span>
+            </div>
+            <div class="input-box">
+                <input type="password" required>
+                <span>Password</span>
+            </div>
+            <div class="input-box">
+                <input type="password" required>
+                <span>Confirm Password</span>
+            </div>
+            <input type="submit" value="Sign Up" class="btn">
+            <p class="toggle-link" onclick="toggleForm()">Already have an account? Sign In</p>
+        </form>
     </div>
 
     <script>
         function toggleForm() {
-            let signinForm = document.getElementById("signin-form");
-            let signupForm = document.getElementById("signup-form");
+            let loginForm = document.getElementById("loginForm");
+            let signupForm = document.getElementById("signupForm");
+            let title = document.getElementById("form-title");
 
-            if (signinForm.style.display === "none") {
-                signinForm.style.display = "block";
+            if (loginForm.style.display === "none") {
+                loginForm.style.display = "block";
                 signupForm.style.display = "none";
+                title.innerText = "Sign In";
             } else {
-                signinForm.style.display = "none";
+                loginForm.style.display = "none";
                 signupForm.style.display = "block";
+                title.innerText = "Sign Up";
             }
         }
+
+        // 💖 Floating Hearts Effect
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "💖";
+
+            let size = Math.random() * 20 + 10; // Random size
+            let position = Math.random() * 100; // Random position
+            let duration = Math.random() * 5 + 3; // Random speed
+
+            heart.style.left = `${position}%`;
+            heart.style.fontSize = `${size}px`;
+            heart.style.animationDuration = `${duration}s`;
+
+            document.getElementById("heart-container").appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        setInterval(createHeart, 500); // Generate hearts every 0.5s
     </script>
 
 </body>
